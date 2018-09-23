@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form id="agregarActor">
+            <p:panelGrid columns="2" style="margin:0 auto">
+                <p:outputLabel value="Primer Nombre"/>
+                <p:inputText value="#{actorBean.a.firstName}" />
+
+                <p:outputLabel value="Segundo Nombre"/>
+                <p:inputText value="#{actorBean.a.lastName}" />
+
+                <p:outputLabel value="Fecha"/>
+                <p:inputText value="#{actorBean.a.lastUpdate}" />
+
+                <p:commandButton value="Guardar" actionListener="#{actorBean.setActor}" update=":listarActores"/>
+                <p:commandButton value="Cancelar"/>
+            </p:panelGrid>
+
+        </h:form>
+
+        <p:separator/>
+        <h:form id="listarActores">
+            <p:dataTable var="act" id="tableActores" paginator="true" rows="10" value="#{actorBean.actores}">
+                <p:column headerText="ID">
+                    <h:outputText value="#{act.actorId}"/>
+                </p:column>
+                <p:column headerText="Nombre">
+                    <h:outputText value="#{act.firstName}"/>
+                </p:column>
+                <p:column headerText="">
+                    <p:commandButton value="Modificar" oncomplete="PF('wdgtModificar').show();" update=":forMod">
+                        <f:setPropertyActionListener target="#{actorBean.a}" value="#{act}"/>
+                    </p:commandButton>
+                </p:column>
+                <p:column headerText="">
+                    <p:commandButton value="Eliminar" oncomplete="PF('wdgtEliminar').show();" update=":forEliminar">
+                        <f:setPropertyActionListener target="#{actorBean.a}" value="#{act}"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+
+        </h:form>
+        
+        <!--Dialogo para Modifcar-->
+        <p:dialog id="dlgModificar" widgetVar="wdgtModificar" header="Modificar Actores" showEffect="explode" hideEffect="explode">
+            <h:form id="forMod">
+                <p:panelGrid columns="2" style="margin:0 auto">
+                <p:outputLabel value="Primer Nombre"/>
+                <p:inputText value="#{actorBean.a.firstName}" />
+
+                <p:outputLabel value="Segundo Nombre"/>
+                <p:inputText value="#{actorBean.a.lastName}" />
+
+                <p:outputLabel value="Fecha"/>
+                <p:inputText value="#{actorBean.a.lastUpdate}" />
+
+                <p:commandButton value="Modificar" actionListener="#{actorBean.modificarActor()}" update=":listarActores" oncomplete="PF('wdgtModificar').hide();"/>
+                <p:commandButton value="Cancelar" onclick="PF('wdgtModificar').hide();"/>
+                </p:panelGrid>
+
+            </h:form>
+        </p:dialog> 
+        
+        <!--Dialogo para Elminar-->
+           <p:dialog id="dlgEliminar" widgetVar="wdgtEliminar" header="Eliminar Actor" showEffect="explode" hideEffect="explode">
+            <h:form id="forEliminar">
+                
+                <h:outputText value="Desea eliminar este actor?"/>
+                <p:commandButton value="Si" actionListener="#{actorBean.eliminarActor}" update=":listarActores" oncomplete="PF('wdgtEliminar').hide();"/>
+                <p:commandButton value="No" onclick="PF('wdgtModificar').hide();"/>
+               
+
+            </h:form>
+        </p:dialog>
+
+    </h:body>
+</html>
+
